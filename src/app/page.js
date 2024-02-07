@@ -10,6 +10,8 @@ export default function Home() {
   const [showQR, setShowQR] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
 
+  const [proofs, setProofs] = useState()
+
   const urlRef = useRef(null);
 
   const copyToClipboard = async () => {
@@ -44,11 +46,12 @@ export default function Home() {
     const url = await reclaimReq.start()
     setUrl(url)
     setShowQR(true)
-    console.log(url);
     reclaimReq.on('success', (data) => {
       if (data) {
         const proofs = data
         console.log('proofs', proofs)
+        setProofs(proofs)
+        setShowQR(false)
         // TODO: update business logic based on successful proof
       }
     })
@@ -63,6 +66,7 @@ export default function Home() {
 
   const handleButtonClick = () => {
     setIsCopied(false)
+    setProofs(null)
     getVerificationReq()
   }
 
@@ -109,6 +113,18 @@ export default function Home() {
 
           </>
         )}
+        {
+          proofs && (
+            <>
+              <h3 className="text-slate-300 text-sm lg:text-2xl md:text-xl sm:text-lg xs:text-xs mt-8">Proofs Received</h3>
+                {proofs.map((proof, index) => (
+                  <div key={index} className="flex flex-col gap-2 text-wrap justify-center items-center p-8 ">
+                    <pre className='text-wrap text-slate-400'>{JSON.stringify(proof.extractedParameterValues)}</pre>
+                  </div>
+                ))}
+              </>
+          )
+        }
       </div>
 
     </main>
