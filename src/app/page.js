@@ -6,12 +6,21 @@ import QRCode from "react-qr-code";
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 
+const APP_ID = process.env.NEXT_PUBLIC_APP_ID
+const APP_SECRET = process.env.NEXT_PUBLIC_APP_SECRET
+
 export default function Home() {
   const [url, setUrl] = useState('')
   const [isMobileDevice, setIsMobileDevice] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false);
+
+  const [myProviders, setMyProviders] = useState([])
+
+  const [selectedProvider, setSelectedProvider] = useState(myProviders[0] || {})
+
+  const [selectedProviderId, setSelectedProviderId] = useState(myProviders[0]?.httpProviderId || '')
 
 
   const [proofs, setProofs] = useState()
@@ -31,11 +40,9 @@ export default function Home() {
   };
 
   const getVerificationReq = async () => {
-    const APP_ID = process.env.NEXT_PUBLIC_APP_ID
-    const APP_SECRET = process.env.NEXT_PUBLIC_APP_SECRET
 
     const reclaimClient = new ReclaimClient(APP_ID);
-    const providers = ['1bba104c-f7e3-4b58-8b42-f8c0346cdeab'];
+    const providers = [selectedProviderId];
     const providerV2 = await reclaimClient.buildHttpProviderV2ByID(
       providers
     )
@@ -91,6 +98,23 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
+
+    // fetch providers
+    const fetchProviders = async () => {
+      const res = await fetch(`https://api.reclaimprotocol.org/v2/app-http-providers/${APP_ID}`)
+      const data = await res.json()
+      setMyProviders(data.result.providers)
+      setSelectedProvider(data.result.providers[0])
+    }
+    console.log('myProviders', myProviders)
+    fetchProviders()
+  }, [])
+
+  useEffect(() => {
+    console.log('my providers', myProviders)
+  }, [myProviders])
+
+  useEffect(() => {
     if (proofs) {
       setShowConfetti(true);
       setTimeout(() => {
@@ -100,13 +124,27 @@ export default function Home() {
   }, [proofs]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between mt-8 gap-4">
+    <main className="flex min-h-screen flex-col items-center justify-between p-8 mt-8 gap-4">
       <div className="z-10 w-full flex flex-col gap-4 items-center justify-center font-mono text-sm">
         <h2 className="text-slate-300 text-sm lg:text-4xl md:text-3xl sm:text-xl xs:text-xs text-nowrap">Welcome to Reclaim Protocol Demo</h2>
         <h4 className="text-slate-400 text-sm lg:text-xl md:text-lg sm:text-lg xs:text-xs">This demo uses <span className="text-slate-300"><a href='https://www.npmjs.com/package/@reclaimprotocol/js-sdk'> @reclaimprotocol/js-sdk </a></span> to generate proofs of your web2 data</h4>
+
+        <select value={selectedProviderId} onChange={(e) => {
+          setSelectedProviderId(e.target.value)
+          setSelectedProvider(myProviders.find(provider => provider.httpProviderId === e.target.value))
+          }} 
+          className="max-w-fit px-3 py-2 text-black bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+          {myProviders.map((provider, index) => (
+            <option key={index} value={provider.httpProviderId}>
+              {provider.name}
+            </option>
+          ))}
+        </select>
+
         <button className="bg-blue-500 mt-8 hover:bg-blue-700 lg:text-lg md:text-base sm:text-lg text-white font-semibold py-2 px-4 rounded"
           onClick={handleButtonClick}
-        >Generate Proof Of Ownership Of Steam ID</button>
+        >Generate Proof Of Ownership Of {selectedProvider.name} </button>
         {showQR && (
           <>
             {!isMobileDevice && (
