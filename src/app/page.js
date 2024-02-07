@@ -104,6 +104,7 @@ export default function Home() {
       const res = await fetch(`https://api.reclaimprotocol.org/v2/app-http-providers/${APP_ID}`)
       const data = await res.json()
       setMyProviders(data.result.providers)
+      setSelectedProviderId(data.result.providers[0].httpProviderId)
       setSelectedProvider(data.result.providers[0])
     }
     console.log('myProviders', myProviders)
