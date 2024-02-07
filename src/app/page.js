@@ -3,14 +3,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { ReclaimClient } from '@reclaimprotocol/js-sdk'
 import QRCode from "react-qr-code";
+import Confetti from 'react-confetti'
+import useWindowSize from 'react-use/lib/useWindowSize'
 
 export default function Home() {
   const [url, setUrl] = useState('')
   const [isMobileDevice, setIsMobileDevice] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false);
+
 
   const [proofs, setProofs] = useState()
+
+  const { width, height } = useWindowSize()
 
   const urlRef = useRef(null);
 
@@ -84,14 +90,23 @@ export default function Home() {
 
   }, [])
 
+  useEffect(() => {
+    if (proofs) {
+      setShowConfetti(true);
+      setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000); // 10 seconds
+    }
+  }, [proofs]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8 mt-8 gap-4">
+    <main className="flex min-h-screen flex-col items-center justify-between mt-8 gap-4">
       <div className="z-10 w-full flex flex-col gap-4 items-center justify-center font-mono text-sm">
         <h2 className="text-slate-300 text-sm lg:text-4xl md:text-3xl sm:text-xl xs:text-xs text-nowrap">Welcome to Reclaim Protocol Demo</h2>
-        <h4 className="text-slate-400 text-sm lg:text-xl md:text-lg sm:text-lg xs:text-xs">This demo uses <span className="text-slate-300"><a href='https://www.npmjs.com/package/@reclaimprotocol/js-sdk'> @reclaimprotocol/js-sdk </a></span> to generate proofs</h4>
+        <h4 className="text-slate-400 text-sm lg:text-xl md:text-lg sm:text-lg xs:text-xs">This demo uses <span className="text-slate-300"><a href='https://www.npmjs.com/package/@reclaimprotocol/js-sdk'> @reclaimprotocol/js-sdk </a></span> to generate proofs of your web2 data</h4>
         <button className="bg-blue-500 mt-8 hover:bg-blue-700 lg:text-lg md:text-base sm:text-lg text-white font-semibold py-2 px-4 rounded"
           onClick={handleButtonClick}
-        >Generate Proof</button>
+        >Generate Proof Of Ownership Of Steam ID</button>
         {showQR && (
           <>
             {!isMobileDevice && (
@@ -117,12 +132,19 @@ export default function Home() {
           proofs && (
             <>
               <h3 className="text-slate-300 text-sm lg:text-2xl md:text-xl sm:text-lg xs:text-xs mt-8">Proofs Received</h3>
-                {proofs.map((proof, index) => (
-                  <div key={index} className="flex flex-col gap-2 text-wrap justify-center items-center p-8 ">
-                    <pre className='text-wrap text-slate-400'>{JSON.stringify(proof.extractedParameterValues)}</pre>
-                  </div>
-                ))}
-              </>
+              {proofs.map((proof, index) => (
+                <div key={index} className="flex flex-col gap-2 text-wrap justify-center items-center">
+                  <pre className='text-wrap text-slate-400'>{JSON.stringify(proof.extractedParameterValues)}</pre>
+                  {/* <code className='whitespace-pre-wrap'>{JSON.stringify(proof, null, 2)}</code> */}
+                </div>
+              ))}
+              {showConfetti && (
+                <Confetti
+                  width={width}
+                  height={height}
+                />
+              )}
+            </>
           )
         }
       </div>
