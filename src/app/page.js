@@ -83,7 +83,8 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-8 mt-8 gap-4">
       <div className="z-10 w-full flex flex-col gap-4 items-center justify-center font-mono text-sm">
-        <h2 className="text-sm lg:text-4xl md:text-3xl sm:text-xl xs:text-xs text-nowrap">Welcome to Reclaim Protocol Demo</h2>
+        <h2 className="text-slate-300 text-sm lg:text-4xl md:text-3xl sm:text-xl xs:text-xs text-nowrap">Welcome to Reclaim Protocol Demo</h2>
+        <h4 className="text-slate-400 text-sm lg:text-xl md:text-lg sm:text-lg xs:text-xs">This demo uses <span className="text-slate-300"><a href='https://www.npmjs.com/package/@reclaimprotocol/js-sdk'> @reclaimprotocol/js-sdk </a></span> to generate proofs</h4>
         <button className="bg-blue-500 mt-8 hover:bg-blue-700 lg:text-lg md:text-base sm:text-lg text-white font-semibold py-2 px-4 rounded"
           onClick={handleButtonClick}
         >Generate Proof</button>
