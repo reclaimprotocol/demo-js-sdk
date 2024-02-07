@@ -112,10 +112,6 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    console.log('my providers', myProviders)
-  }, [myProviders])
-
-  useEffect(() => {
     if (proofs) {
       setShowConfetti(true);
       setTimeout(() => {
