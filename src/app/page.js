@@ -170,12 +170,17 @@ export default function Home() {
           proofs && (
             <>
               <h3 className="text-slate-300 text-sm lg:text-2xl md:text-xl sm:text-lg xs:text-xs mt-8">Proofs Received</h3>
-              {proofs.map((proof, index) => (
+              {proofs.map((proof, index) => {
+                const objKeys = Object.keys(proof.extractedParameterValues)
+                const objValues = Object.values(proof.extractedParameterValues)
+                return (
                 <div key={index} className="flex flex-col gap-2 text-wrap justify-center items-center">
-                  <pre className='text-wrap text-slate-400'>{JSON.stringify(proof.extractedParameterValues)}</pre>
+                  <pre className='text-wrap text-slate-400'>{objKeys.map((key, index) => {
+                    return `${key}: ${objValues[index]}`
+                  }).join('\n')}</pre>
                   {/* <code className='whitespace-pre-wrap'>{JSON.stringify(proof, null, 2)}</code> */}
                 </div>
-              ))}
+              )})}
               {showConfetti && (
                 <Confetti
                   width={width}
@@ -190,3 +195,34 @@ export default function Home() {
     </main>
   );
 }
+
+
+// [
+//   {
+//       "identifier": "0x7aa78bb5850caa606c29259a89336339ccdc164703410a44d8b917652a876598",
+//       "claimData": {
+//           "provider": "http",
+//           "parameters": "{\"body\":\"\",\"geoLocation\":\"\",\"method\":\"GET\",\"responseMatches\":[{\"type\":\"contains\",\"value\":\"\\\"restaurant_name\\\":\\\"MOJO Pizza - 2X Toppings\\\"\"},{\"type\":\"contains\",\"value\":\"\\\"name\\\":\\\"Italian Stuffed Garlic Bread + Cheesy Dip [FREE]\\\"\"},{\"type\":\"contains\",\"value\":\"\\\"category_details\\\":{\\\"category\\\":\\\"Garlic Breads + Cheesy Dip [FREE]\\\",\\\"sub_category\\\":\\\"nota\\\"}\"},{\"type\":\"contains\",\"value\":\"\\\"order_total\\\":1311\"}],\"responseRedactions\":[{\"jsonPath\":\"$.data.orders[0].restaurant_name\",\"regex\":\"\\\"restaurant_name\\\":\\\"(.*)\\\"\",\"xPath\":\"\"},{\"jsonPath\":\"$.data.orders[0].order_items[0].name\",\"regex\":\"\\\"name\\\":\\\"(.*)\\\"\",\"xPath\":\"\"},{\"jsonPath\":\"$.data.orders[0].order_items[0].category_details\",\"regex\":\"\\\"category_details\\\":(.*)\",\"xPath\":\"\"},{\"jsonPath\":\"$.data.orders[0].order_total\",\"regex\":\"\\\"order_total\\\":(.*)\",\"xPath\":\"\"}],\"url\":\"https://www.swiggy.com/dapi/order/all?order_id=\"}",
+//           "owner": "0xbbbc1ae2faf210b15a6c0be049500583fc3d94e2",
+//           "timestampS": 1707411277,
+//           "context": "{\"contextAddress\":\"0x0\",\"contextMessage\":\"\"}",
+//           "identifier": "0x7aa78bb5850caa606c29259a89336339ccdc164703410a44d8b917652a876598",
+//           "epoch": 2
+//       },
+//       "signatures": [
+//           "0x476b204fc6b1c6fc76760eb48b954b155561bf0cc2627b370e1883c8e33c21a01b70bc7ef51473c6bd74fd56b39b20d754314b354a34e8e95415fa63bddc310e1c"
+//       ],
+//       "witnesses": [
+//           {
+//               "id": "0x244897572368eadf65bfbc5aec98d8e5443a9072",
+//               "url": "https://reclaim-node.questbook.app"
+//           }
+//       ],
+//       "extractedParameterValues": {
+//           "restaurant_1": "MOJO Pizza - 2X Toppings",
+//           "restaurant_1_order_item_name": "Italian Stuffed Garlic Bread + Cheesy Dip [FREE]",
+//           "restaurant_1_order_category": "{\"category\":\"Garlic Breads + Cheesy Dip [FREE]\",\"sub_category\":\"nota\"}",
+//           "amount_paid": "1311"
+//       }
+//   }
+// ]
