@@ -29,6 +29,8 @@ export default function Home() {
 
   const urlRef = useRef(null);
 
+  const reclaimClient = new ReclaimClient(APP_ID);
+
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(url);
@@ -40,8 +42,6 @@ export default function Home() {
   };
 
   const getVerificationReq = async () => {
-
-    const reclaimClient = new ReclaimClient(APP_ID);
     const providers = [selectedProviderId];
     const providerV2 = await reclaimClient.buildHttpProviderV2ByID(
       providers
@@ -98,16 +98,13 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-
     // fetch providers
     const fetchProviders = async () => {
-      const res = await fetch(`https://api.reclaimprotocol.org/v2/app-http-providers/${APP_ID}`)
-      const data = await res.json()
-      setMyProviders(data.result.providers)
-      setSelectedProviderId(data.result.providers[0].httpProviderId)
-      setSelectedProvider(data.result.providers[0])
+      const providers = await reclaimClient.getMyProvidersList()
+      setMyProviders(providers)
+      setSelectedProviderId(providers[0].httpProviderId)
+      setSelectedProvider(providers[0])
     }
-    console.log('myProviders', myProviders)
     fetchProviders()
   }, [])
 
