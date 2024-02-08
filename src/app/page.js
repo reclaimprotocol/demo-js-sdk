@@ -126,9 +126,9 @@ export default function Home() {
         <select value={selectedProviderId} onChange={(e) => {
           setSelectedProviderId(e.target.value)
           setSelectedProvider(myProviders.find(provider => provider.httpProviderId === e.target.value))
-          }} 
+        }}
           className="max-w-fit px-3 py-2 text-black bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
+        >
           {myProviders.map((provider, index) => (
             <option key={index} value={provider.httpProviderId}>
               {provider.name}
@@ -141,19 +141,24 @@ export default function Home() {
         >Generate Proof Of Ownership Of {selectedProvider.name} </button>
         {showQR && (
           <>
+          <button onClick={copyToClipboard} className="border-gray-500 border-2 px-2 hover:bg-gray-300 font-semibold rounded shadow">
+                  {isCopied ? 'Copied!' : 'Copy Link'}</button> and open it in your mobile browser
             {!isMobileDevice && (
               <>
-                <p>Scan the QR code or</p>
+                <p>Or scan the QR code</p>
                 <input ref={urlRef} value={url} readOnly style={{ opacity: 0, position: 'absolute', zIndex: -1 }} />
-                <button onClick={copyToClipboard} className="border-gray-500 border-2 px-2 hover:bg-gray-300 font-semibold rounded shadow">
-                  {isCopied ? 'Copied!' : 'Copy Link'}</button>
-                <QRCode value={url} />
+                {/* <button onClick={copyToClipboard} className="border-gray-500 border-2 px-2 hover:bg-gray-300 font-semibold rounded shadow">
+                  {isCopied ? 'Copied!' : 'Copy Link'}</button> */}
+                <div style={{ border: '16px solid white' }}>
+                  <QRCode value={url} />
+                </div>
+
               </>
             )
             }
             {isMobileDevice && (
               <>
-                <p className="mt-8 lg:text-lg">Click on `Open Link` button below to generate proof</p>
+                <p className="mt-8 lg:text-lg">Or click on `Open Link` button below to generate proof</p>
                 <button onClick={() => window.open(url, "_blank")} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Open Link</button>
               </>
             )}
