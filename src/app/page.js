@@ -118,7 +118,7 @@ export default function Home() {
   }, [proofs]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8 mt-8 gap-4">
+    <main className="flex min-h-screen flex-col items-center justify-between p-8 mt-8 gap-4 bg-black">
       <div className="z-10 w-full flex flex-col gap-4 items-center justify-center font-mono text-sm">
         <h2 className="text-slate-300 text-sm lg:text-4xl md:text-3xl sm:text-xl xs:text-xs text-nowrap">Welcome to Reclaim Protocol Demo</h2>
         <h4 className="text-slate-400 text-sm lg:text-xl md:text-lg sm:text-lg xs:text-xs">This demo uses <span className="text-slate-300"><a href='https://www.npmjs.com/package/@reclaimprotocol/js-sdk'> @reclaimprotocol/js-sdk </a></span> to generate proofs of your web2 data</h4>
@@ -136,16 +136,17 @@ export default function Home() {
           ))}
         </select>
 
-        <button className="bg-blue-500 mt-8 hover:bg-blue-700 lg:text-lg md:text-base sm:text-lg text-white font-semibold py-2 px-4 rounded"
+        <button className="bg-blue-500 mt-8 hover:bg-blue-700 lg:text-lg md:text-base sm:text-lg text-gray-200 font-semibold py-2 px-4 rounded"
           onClick={handleButtonClick}
         >Generate Proof Of Ownership Of {selectedProvider.name} </button>
         {showQR && (
           <>
-          <button onClick={copyToClipboard} className="border-gray-500 border-2 px-2 hover:bg-gray-300 font-semibold rounded shadow">
-                  {isCopied ? 'Copied!' : 'Copy Link'}</button> and open it in your mobile browser
+          <span className='text-gray-300'>
+          <button onClick={copyToClipboard} className="border-gray-500 border-2 mt-8 px-2 hover:bg-gray-300 text-gray-400 font-semibold rounded shadow">
+                  {isCopied ? 'Copied!' : 'Copy Link'}</button> and open it in your mobile browser </span>
             {!isMobileDevice && (
               <>
-                <p>Or scan the QR code</p>
+                <p className='text-gray-300'>Or scan the QR code</p>
                 <input ref={urlRef} value={url} readOnly style={{ opacity: 0, position: 'absolute', zIndex: -1 }} />
                 {/* <button onClick={copyToClipboard} className="border-gray-500 border-2 px-2 hover:bg-gray-300 font-semibold rounded shadow">
                   {isCopied ? 'Copied!' : 'Copy Link'}</button> */}
@@ -158,7 +159,7 @@ export default function Home() {
             }
             {isMobileDevice && (
               <>
-                <p className="mt-8 lg:text-lg">Or click on `Open Link` button below to generate proof</p>
+                <p className="mt-8 lg:text-lg text-gray-400">Or click on `Open Link` button below to generate proof</p>
                 <button onClick={() => window.open(url, "_blank")} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Open Link</button>
               </>
             )}
